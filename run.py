@@ -72,7 +72,6 @@ def tick():
     for item in ITEMS:
         if start:
             item.move()
-        item.collide_paddle(paddle, ITEMS, BALLS)
         if item.alive() == False:
             ITEMS.remove(item)
 
