@@ -38,11 +38,15 @@ ball_size = (20, 20)
 
 
 # Setting for items
+item_speed = display_dimension[1] / 160
 item_size = (20, 20)
 one_more_prob = 0.3
 fever_prob = 0.1
 add_score_prob = 0.1
 paddle_long_prob = 0.1
+item_prob = 0.2
+red_item_prob = 0.5
+blue_item_prob = 0.5
 
 fever_time = 5
 
