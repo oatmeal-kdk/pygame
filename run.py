@@ -63,11 +63,17 @@ def tick():
             ball.rect.centerx = paddle.rect.centerx
             ball.rect.bottom = paddle.rect.top
 
-        ball.collide_block(BLOCKS)
+        ball.collide_block(BLOCKS, ITEMS)
         ball.collide_paddle(paddle)
         ball.hit_wall()
         if ball.alive() == False:
             BALLS.remove(ball)
+    
+    for item in ITEMS:
+        if start:
+            item.move()
+        if item.alive() == False:
+            ITEMS.remove(item)
 
 
 def main():
@@ -90,7 +96,10 @@ def main():
 
         for block in BLOCKS:
             block.draw(surface)
-
+        
+        for item in ITEMS:
+            item.draw(surface)
+ 
         cur_score = config.num_blocks[0] * config.num_blocks[1] - len(BLOCKS)
 
         score_txt = my_font.render(f"Score : {cur_score * 10}", True, config.colors[2])
@@ -104,6 +113,7 @@ def main():
                 life -= 1
                 ball1 = Ball()
                 BALLS = [ball1]
+                ITEMS = []
                 start = False
             else:
                 surface.blit(mess_over, (200, 300))
@@ -116,6 +126,10 @@ def main():
                 ball.draw(surface)
             for block in BLOCKS:
                 block.draw(surface)
+            for item in ITEMS:
+                if start == True:
+                    item.move()
+                item.draw(surface)
 
         pygame.display.update()
         fps_clock.tick(config.fps)

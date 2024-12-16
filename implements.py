@@ -25,7 +25,7 @@ class Basic:
 
 
 class Block(Basic):
-    def __init__(self, color: tuple, pos: tuple = (0,0), alive = True):
+    def __init__(self, color: tuple, pos: tuple = (0, 0), alive = True):
         super().__init__(color, 0, pos, config.block_size)
         self.pos = pos
         self.alive = alive
@@ -37,8 +37,7 @@ class Block(Basic):
         self.alive = False
         return True
         # ============================================
-        # TODO: Implement an event when block collides with a ball
-        
+        # TODO: Implement an event when block collides with a ball  
 
 
 class Paddle(Basic):
@@ -67,20 +66,28 @@ class Ball(Basic):
     def draw(self, surface):
         pygame.draw.ellipse(surface, self.color, self.rect)
 
-    def collide_block(self, blocks: list):
-         for block in blocks: 
+    def collide_block(self, blocks: list, items: list): 
+        for block in blocks: 
             if block.alive and self.rect.colliderect(block.rect):
                 if self.rect.bottom >= block.rect.top and self.rect.top <= block.rect.bottom:
                     self.dir = 180 - self.dir  # 좌우 충돌
+                    if random.random() < config.item_prob:
+                        if random.random() < config.red_item_prob:
+                            items.append(RedItem(self.center))
+                        else:
+                            items.append(BlueItem(self.center))
                 else:
                     self.dir = 360 - self.dir  # 상하 충돌
+                    if random.random() < config.item_prob:
+                        if random.random() < config.red_item_prob:
+                            items.append(RedItem(self.center))
+                        else:
+                            items.append(BlueItem(self.center))
                 self.dir += random.randint(-5, 5)  # 약간의 랜덤성 추가
                 block.collide()
                 blocks.remove(block)
                 return True
-         return False
-
-        
+        return False
 
     def collide_paddle(self, paddle: Paddle) -> None:
         if self.rect.colliderect(paddle.rect):
@@ -94,4 +101,29 @@ class Ball(Basic):
       
     def alive(self):
         return self.rect.bottom <= config.display_dimension[1]
-        
+
+
+class Item(Basic):
+    def __init__(self, pos: tuple = (0, 0)):
+        super().__init__((0, 0, 0), config.item_speed, pos, config.item_size)
+    
+    def draw(self, surface):
+        pygame.draw.ellipse(surface, self.color, self.rect)
+
+    def move(self):
+        self.rect.move_ip(0, self.speed)
+
+    def alive(self):
+        return self.rect.bottom <= config.display_dimension[1]
+
+
+class RedItem(Item):
+    def __init__(self, pos: tuple = config.ball_pos):
+        super().__init__(pos)
+        self.color = (255, 0, 0)
+
+
+class BlueItem(Item):
+    def __init__(self, pos: tuple = config.ball_pos):
+        super().__init__(pos)
+        self.color = (0, 0, 255)
