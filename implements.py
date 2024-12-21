@@ -122,8 +122,20 @@ class RedItem(Item):
         super().__init__(pos)
         self.color = (255, 0, 0)
 
+    def collide_paddle(self, paddle: Paddle, items: list, balls: list):
+        if self.rect.colliderect(paddle.rect):
+            items.remove(self)
+            balls.append(Ball((paddle.rect.centerx, paddle.rect.centery - config.ball_size[1])))
+
 
 class BlueItem(Item):
     def __init__(self, pos: tuple = config.ball_pos):
         super().__init__(pos)
         self.color = (0, 0, 255)
+        
+    def collide_paddle(self, paddle: Paddle, items: list, balls: list):
+        pass
+        # if self.rect.colliderect(paddle.rect):
+        #     items.remove(self)
+        #     new_balls = [Ball(ball.rect.center) for ball in balls for _ in range(2)]
+        #     balls.extend(new_balls)
